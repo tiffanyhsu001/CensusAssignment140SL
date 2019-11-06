@@ -3,3 +3,4 @@
 
 ## Group Members: 
   Waveley Qiu
+  Shami Shaji
