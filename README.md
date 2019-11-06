@@ -3,8 +3,14 @@
 
 ## Group Members: 
  Tiffany Hsu
+ 
  Christina Indudhara
+ 
  Waveley Qiu
+ 
  Shami Shaji
+ 
  Jeremy Tran
+ 
  Faith Tsang
+ 
