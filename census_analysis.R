@@ -87,3 +87,37 @@ census <- read_xlsx(
 
 ##### Write to CSV #####
 write_csv(census, path = "~/.csv")
+
+#### Cleaning Variables ####
+
+## Travel_to_school - Change the made-up choices to NA
+unique(census$Travel_to_School)
+census$Travel_to_School[census$Travel_to_School == "Travel_to_school"] = NA
+census$Travel_to_School[census$Travel_to_School == "Dinosaur"] = NA
+
+## Travel_time_to_school
+census$Travel_time_to_School = as.numeric(census$Travel_time_to_School)
+copy = census$Travel_time_to_School
+
+under1 = copy[copy<1]
+under1 = na.omit(under1)
+sort(unique(under1))
+
+high = copy[copy>180]
+high = na.omit(high)
+sort(unique(high))
+
+# For inputs under 1, I assume that student meant decimal of the hour. To fix this, multiply them by 60. 
+# Anything under 0.1 is equivalent to less than 1 minute, so these will also be labelled as NA.
+# inputs above 180 (3 hours) is unlikely, we will label those as NA.
+census$Travel_time_to_School[is.na(census$Travel_time_to_School)] = 0
+for(i in 1:nrow(census)){
+  if ((census$Travel_time_to_School[i] < 1) && (census$Travel_time_to_School[i] >= 0.1)){
+    census$Travel_time_to_School[i] = census$Travel_time_to_School[i] * 60 
+  }else if((census$Travel_time_to_School[i] > 180) || (census$Travel_time_to_School[i] < 0.1)){
+    census$Travel_time_to_School[i] = NA
+  }
+}
+
+summary(census$Travel_time_to_School)
+
