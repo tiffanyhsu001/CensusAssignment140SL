@@ -95,8 +95,24 @@ unique(census$Travel_to_School)
 census$Travel_to_School[census$Travel_to_School == "Travel_to_school"] = NA
 census$Travel_to_School[census$Travel_to_School == "Dinosaur"] = NA
 
-## Travel_time_to_school
+## Travel_time_to_school FLAG variable: # For inputs under 1, I assume that student meant decimal of the hour. 
+# To fix this, multiply them by 60. 
 census$Travel_time_to_School = as.numeric(census$Travel_time_to_School)
+travel_time_to_school = census$Travel_time_to_School
+travel_time_to_school[is.na(travel_time_to_school)] = 0
+for(i in 1:length(travel_time_to_school)){
+  if ((travel_time_to_school[i] < 1) && (travel_time_to_school[i] >= 0.1)){
+    travel_time_to_school[i] = travel_time_to_school[i] * 60 
+  }
+}
+
+census$flag_travel_time_to_school = 0
+census$flag_travel_time_to_school[which(travel_time_to_school>120)] = 2
+census$flag_travel_time_to_school[which(travel_time_to_school>60 & travel_time_to_school<=120)] = 1
+census$flag_travel_time_to_school[which(travel_time_to_school<=60)] = 0
+
+
+## Changing Travel_time_to_school in data
 copy = census$Travel_time_to_School
 
 under1 = copy[copy<1]
@@ -110,6 +126,7 @@ sort(unique(high))
 # For inputs under 1, I assume that student meant decimal of the hour. To fix this, multiply them by 60. 
 # Anything under 0.1 is equivalent to less than 1 minute, so these will also be labelled as NA.
 # inputs above 180 (3 hours) is unlikely, we will label those as NA.
+
 census$Travel_time_to_School[is.na(census$Travel_time_to_School)] = 0
 for(i in 1:nrow(census)){
   if ((census$Travel_time_to_School[i] < 1) && (census$Travel_time_to_School[i] >= 0.1)){
